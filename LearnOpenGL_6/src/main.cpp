@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Shader.h"
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -11,27 +13,6 @@ const int height = 600;
 void framebuffer_size_callback(GLFWwindow* window, int _width, int _height)
 {
     glViewport(0, 0, _width, _height);
-}
-
-std::string readFile(std::string filePath)
-{
-    std::fstream fs;
-    fs.open(filePath, std::fstream::in);
-    if(fs.is_open())
-    {
-        std::string content;
-        std::string line;
-
-        while(std::getline(fs, line))
-        {
-            content.append(line + "\n");
-        }
-        content.append("\0");
-        return content;
-    }
-
-    std::cerr << "Could not open file: " << filePath << ". File does not exist." << std::endl;
-    return "";
 }
 
 int main()
@@ -61,36 +42,13 @@ int main()
     int success;
     char infoLog[512];
 
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    std::string vertexShaderSourceStr = readFile("../shaders/vertex/vertexShaderSource.vert");
-    const char* vertexShaderSource = vertexShaderSourceStr.c_str();
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if(!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cerr << "[ERROR] SHADER::VERTEX::COMPILATION_FAILED: " << infoLog << std::endl;
-    }
-
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    std::string fragmentShaderSourceStr = readFile("../shaders/fragment/fragmentShaderSource.frag");
-    const char* fragmentShaderSource = fragmentShaderSourceStr.c_str();
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if(!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cerr << "[ERROR] SHADER::FRAGMENT::COMPILATION_FAILED: " << infoLog << std::endl;
-    }
+    Shader vertexShader("../shaders/vertex/vertexShaderSource.vert", GL_VERTEX_SHADER);
+    Shader fragmentShader("../shaders/fragment/fragmentShaderSource.frag", GL_FRAGMENT_SHADER);
 
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
+    vertexShader.attachShader(shaderProgram);
+    fragmentShader.attachShader(shaderProgram);
     glLinkProgram(shaderProgram);
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
     if(!success)
@@ -100,8 +58,8 @@ int main()
     }
 
     glUseProgram(shaderProgram);
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    vertexShader.deleteShader();
+    fragmentShader.deleteShader();
 
     float triangle[] = 
     {   //Positions      //Colors

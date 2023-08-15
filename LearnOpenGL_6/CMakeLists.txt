@@ -13,6 +13,7 @@ link_directories(lib)
 
 add_executable(LearnOpenGL_6
     src/glad.c
+    src/Shader.cpp
     src/main.cpp
     )
 
