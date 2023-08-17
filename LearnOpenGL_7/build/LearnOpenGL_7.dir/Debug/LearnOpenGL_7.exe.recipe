@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>D:\ForgeCor3\Github\LearnOpenGL\LearnOpenGL_7\build\x64\Debug\ZERO_CHECK</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\ForgeCor3\Github\LearnOpenGL\LearnOpenGL_7\build\x64\Debug\copy_resources</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\ForgeCor3\Github\LearnOpenGL\LearnOpenGL_7\build\x64\Debug\copy_shaders</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\ForgeCor3\Github\LearnOpenGL\LearnOpenGL_7\build\Debug\LearnOpenGL_7.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>
