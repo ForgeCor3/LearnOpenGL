@@ -1,5 +1,0 @@
-D:/ForgeCor3/Github/LearnOpenGL/LearnOpenGL_7/build/CMakeFiles/LearnOpenGL_7.dir
-D:/ForgeCor3/Github/LearnOpenGL/LearnOpenGL_7/build/CMakeFiles/copy_shaders.dir
-D:/ForgeCor3/Github/LearnOpenGL/LearnOpenGL_7/build/CMakeFiles/copy_resources.dir
-D:/ForgeCor3/Github/LearnOpenGL/LearnOpenGL_7/build/CMakeFiles/ALL_BUILD.dir
-D:/ForgeCor3/Github/LearnOpenGL/LearnOpenGL_7/build/CMakeFiles/ZERO_CHECK.dir
