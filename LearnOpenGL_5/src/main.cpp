@@ -143,6 +143,10 @@ int main()
         glfwPollEvents();
     }
 
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+
     glfwTerminate();
     return 0;
 }
