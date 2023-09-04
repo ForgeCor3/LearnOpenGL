@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.27.0)
 
-project(LearnOpenGL_8.19.1)
+project(LearnOpenGL_Exercises_8.19.1)
 
 include_directories(
     include
@@ -12,7 +12,7 @@ include_directories(
 
 link_directories(lib)
 
-add_executable(LearnOpenGL_8.19.1
+add_executable(LearnOpenGL_Exercises_8.19.1
     src/glad.c
     src/stb_image.cpp
     src/Shader.cpp
@@ -25,7 +25,7 @@ add_custom_target(copy_shaders ALL
     ${PROJECT_BINARY_DIR}/shaders
     COMMENT "Copying shaders into binary directory"
     )
-add_dependencies(LearnOpenGL_8.19.1 copy_shaders)
+add_dependencies(LearnOpenGL_Exercises_8.19.1 copy_shaders)
 
 add_custom_target(copy_resources ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -33,6 +33,6 @@ add_custom_target(copy_resources ALL
     ${PROJECT_BINARY_DIR}/resources
     COMMENT "Copying resources into binary directory"
     )
-add_dependencies(LearnOpenGL_8.19.1 copy_resources)
+add_dependencies(LearnOpenGL_Exercises_8.19.1 copy_resources)
 
-target_link_libraries(LearnOpenGL_8.19.1 glfw3)
+target_link_libraries(LearnOpenGL_Exercises_8.19.1 glfw3)
