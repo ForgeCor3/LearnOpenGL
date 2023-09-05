@@ -27,6 +27,8 @@ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
+float fov = 45.0f;
+
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
@@ -70,6 +72,15 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos)
     cameraFront = glm::normalize(cameraDirection);
 }
 
+void scroll_callback(GLFWwindow *window, double xOffset, double yOffset)
+{
+    fov -= (float)yOffset;
+    if(fov < 1.0f)
+        fov = 1.0f;
+    if(fov > 45.0f)
+        fov = 45.0f;
+}
+
 void processInput(GLFWwindow *window)
 {
     const float cameraSpeed = 2.5f * deltaTime;
@@ -109,6 +120,7 @@ int main()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
 
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -267,10 +279,6 @@ int main()
     glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
     glUniform1i(glGetUniformLocation(shaderProgram, "texture2"), 1);
 
-    glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
     while(!glfwWindowShouldClose(window))
     {
         glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -285,6 +293,10 @@ int main()
         glm::mat4 view = glm::mat4(1.0f);
         view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+
+        glm::mat4 projection = glm::mat4(1.0f);
+        projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         for(int i = 0; i < 10; i++)
         {
