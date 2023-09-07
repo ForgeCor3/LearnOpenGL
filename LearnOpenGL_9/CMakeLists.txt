@@ -3,14 +3,14 @@ cmake_minimum_required(VERSION 3.27.0)
 project(LearnOpenGL_9)
 
 include_directories(
-    include
-    include/glad
-    include/GLFW
-    include/glm
-    include/KHR
+    ../LearnOpenGL_Include/
+    ../LearnOpenGL_Include/glad
+    ../LearnOpenGL_Include/GLFW
+    ../LearnOpenGL_Include/glm
+    ../LearnOpenGL_Include/KHR
     )
 
-link_directories(lib)
+link_directories(../LearnOpenGL_Lib/)
 
 add_executable(LearnOpenGL_9
     src/glad.c
