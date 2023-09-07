@@ -16,6 +16,7 @@ add_executable(LearnOpenGL_10
     src/glad.c
     src/stb_image.cpp
     src/Shader.cpp
+    src/Camera.cpp
     src/main.cpp
     )
 

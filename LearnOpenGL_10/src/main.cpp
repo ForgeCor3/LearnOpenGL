@@ -7,27 +7,21 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
+#include "Camera.h"
 
 #include <iostream>
 #include <string>
 #include <fstream>
 
-const int width = 800;
-const int height = 600;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
 
-float yaw = -90.0f;
-float pitch = 0.0f;
+float lastX = SCREEN_WIDTH / 2;
+float lastY = SCREEN_HEIGHT / 2;
 
-float lastX = width / 2;
-float lastY = height / 2;
+bool firstMouseInput = true;
 
-bool firstMouse = true;
-
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
-float fov = 45.0f;
+Camera camera;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -37,69 +31,42 @@ void framebuffer_size_callback(GLFWwindow* window, int _width, int _height)
     glViewport(0, 0, _width, _height);
 }
 
-void mouse_callback(GLFWwindow *window, double xpos, double ypos)
+void mouse_callback(GLFWwindow *window, double xPos, double yPos)
 {
-    if(firstMouse)
+    float FxPos = static_cast<float>(xPos);
+    float FyPos = static_cast<float>(yPos);
+
+    if(firstMouseInput)
     {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
+        lastX = FxPos;
+        lastY = FyPos;
+        firstMouseInput = false;
     }
 
-    float xOffset = xpos - lastX;
-    float yOffset = lastY - ypos;
+    float xOffset = FxPos - lastX;
+    float yOffset = lastY - FyPos;
 
-    lastX = xpos;
-    lastY = ypos;
+    lastX = FxPos;
+    lastY = FyPos;
 
-    const float sensitivity = 0.1;
-    xOffset *= sensitivity;
-    yOffset *= sensitivity;
-
-    yaw += xOffset;
-    pitch += yOffset;
-
-    if(pitch > 89.0f)
-        pitch = 89.0f;
-    if(pitch < -89.0f)
-        pitch = -89.0f;
-
-    glm::vec3 cameraDirection;
-    
-    cameraDirection.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraDirection.y = sin(glm::radians(pitch));
-    cameraDirection.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(cameraDirection);
+    camera.processMouseInput(xOffset, yOffset);
 }
 
 void scroll_callback(GLFWwindow *window, double xOffset, double yOffset)
 {
-    fov -= (float)yOffset;
-    if(fov < 1.0f)
-        fov = 1.0f;
-    if(fov > 45.0f)
-        fov = 45.0f;
+    camera.processMouseScroll(static_cast<float>(yOffset));
 }
 
 void processInput(GLFWwindow *window)
 {
-    const float cameraSpeed = 2.5f * deltaTime;
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-    {
-        cameraPos += cameraSpeed * cameraFront;
-    }
-    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-    {
-        cameraPos -= cameraSpeed * cameraFront;
-    }
+        camera.processKeyboard(FORWARD, deltaTime);
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-    {
-        cameraPos += cameraSpeed * glm::normalize(glm::cross(cameraFront, cameraUp));
-    }
+        camera.processKeyboard(RIGHT, deltaTime);
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        camera.processKeyboard(BACKWARD, deltaTime);
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-    {
-        cameraPos -= cameraSpeed * glm::normalize(glm::cross(cameraFront, cameraUp));
-    }
+        camera.processKeyboard(LEFT, deltaTime);
 }
 
 int main()
@@ -109,7 +76,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(width, height, "LearnOpenGL_10", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL_10", NULL, NULL);
     if(window == nullptr)
     {
         std::cerr << "Failed to create GLFW window" << std::endl;
@@ -118,6 +85,7 @@ int main()
     }
     glfwMakeContextCurrent(window);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
@@ -127,7 +95,7 @@ int main()
         std::cerr << "Failed to initialize GLAD";
         return -1;
     }
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     glEnable(GL_DEPTH_TEST);
 
     int success;
@@ -205,6 +173,9 @@ int main()
 
     stbi_image_free(data);
 
+    glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
+    glUniform1i(glGetUniformLocation(shaderProgram, "texture2"), 1);
+
     float cube[] = 
     {
         -0.5f, -0.5f, -0.5f,    0.0f, 0.0f,
@@ -259,7 +230,6 @@ int main()
         glm::vec3(-1.3f, 1.0f, -1.5f)
     };
 
-
     unsigned int VBO;
     unsigned int VAO;
 
@@ -276,9 +246,6 @@ int main()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
-    glUniform1i(glGetUniformLocation(shaderProgram, "texture2"), 1);
-
     while(!glfwWindowShouldClose(window))
     {
         glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -290,13 +257,11 @@ int main()
 
         processInput(window);
 
-        glm::mat4 view = glm::mat4(1.0f);
-        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-
-        glm::mat4 projection = glm::mat4(1.0f);
-        projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.getFov()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+        glm::mat4 view = camera.getLookAt();
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
         for(int i = 0; i < 10; i++)
         {
