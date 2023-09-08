@@ -13,9 +13,9 @@ include_directories(
 link_directories(../../LearnOpenGL_Lib/)
 
 add_executable(LearnOpenGL_Exercises_9.9.1
-    ../LearnOpenGL_Executable/glad.c
-    ../LearnOpenGL_Executable/stb_image.cpp
-    ../LearnOpenGL_Executable/Shader.cpp
+    ../../LearnOpenGL_Executable/glad.c
+    ../../LearnOpenGL_Executable/stb_image.cpp
+    ../../LearnOpenGL_Executable/Shader.cpp
     main.cpp
     )
 

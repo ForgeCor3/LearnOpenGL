@@ -12,7 +12,7 @@ include_directories(
 link_directories(../../LearnOpenGL_Lib/)
 
 add_executable(LearnOpenGL_Exercises_5.8.2
-    ../LearnOpenGL_Executable/glad.c
+    ../../LearnOpenGL_Executable/glad.c
     main.cpp
     )
 
