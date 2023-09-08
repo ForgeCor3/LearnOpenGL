@@ -13,11 +13,11 @@ include_directories(
 link_directories(../LearnOpenGL_Lib/)
 
 add_executable(LearnOpenGL_10
-    src/glad.c
-    src/stb_image.cpp
-    src/Shader.cpp
-    src/Camera.cpp
-    src/main.cpp
+    ../LearnOpenGL_Executable/glad.c
+    ../LearnOpenGL_Executable/stb_image.cpp
+    ../LearnOpenGL_Executable/Shader.cpp
+    ../LearnOpenGL_Executable/Camera.cpp
+    main.cpp
     )
 
 add_custom_target(copy_shaders ALL

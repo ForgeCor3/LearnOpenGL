@@ -12,8 +12,8 @@ include_directories(
 link_directories(../../LearnOpenGL_Lib/)
 
 add_executable(LearnOpenGL_Exercises_5.8.3
-    src/glad.c
-    src/main.cpp
+    ../LearnOpenGL_Executable/glad.c
+    main.cpp
     )
 
 target_link_libraries(LearnOpenGL_Exercises_5.8.3 glfw3)
