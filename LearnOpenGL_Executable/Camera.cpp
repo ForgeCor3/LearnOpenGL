@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include <iostream>
 
 Camera::Camera(glm::vec3 position,
                glm::vec3 front,
