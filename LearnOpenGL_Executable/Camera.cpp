@@ -65,6 +65,11 @@ float Camera::getFov()
     return cameraFov;
 }
 
+glm::vec3 Camera::getPosition()
+{
+    return cameraPosition;
+}
+
 void Camera::updateCameraVectors()
 {
     cameraFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));

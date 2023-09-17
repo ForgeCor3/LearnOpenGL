@@ -221,6 +221,7 @@ int main()
         glUniform3f(glGetUniformLocation(objectShaderProgram, "lightColor"), 1.0f, 1.0f, 1.0f);
         glUniform3f(glGetUniformLocation(objectShaderProgram, "objectColor"), 1.0f, 0.5f, 0.31f);
         glUniform3f(glGetUniformLocation(objectShaderProgram, "lightPosition"), lightSourcePosition.x, lightSourcePosition.y, lightSourcePosition.z);
+        glUniform3f(glGetUniformLocation(objectShaderProgram, "viewPosition"), camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.getFov()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.getLookAt();
